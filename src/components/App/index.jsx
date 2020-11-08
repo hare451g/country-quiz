@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/core */
 import { Global } from '@emotion/core';
+import MainMenu from '../MainMenu';
 
 import Quiz from '../Quiz';
 
@@ -22,11 +23,7 @@ function App() {
     <>
       <Global styles={globalStyles} />
       <main css={appStyles}>
-        <Quiz
-          choices={mockQuizProps.choices}
-          correctAnswer={mockQuizProps.choices}
-          question={mockQuizProps.question}
-        />
+        <MainMenu />
       </main>
     </>
   );
