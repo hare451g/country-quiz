@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/core */
 import { Global } from '@emotion/core';
 
-import Quiz from '../Quiz';
+import Result from '../Result';
 
 import { appStyles, globalStyles } from './style';
 
@@ -22,11 +22,7 @@ function App() {
     <>
       <Global styles={globalStyles} />
       <main css={appStyles}>
-        <Quiz
-          choices={mockQuizProps.choices}
-          correctAnswer={mockQuizProps.choices}
-          question={mockQuizProps.question}
-        />
+        <Result points={4} />
       </main>
     </>
   );
