@@ -1,23 +1,17 @@
-import { useEffect, useReducer } from 'react';
+/** @jsxImportSource @emotion/core */
+import { Global } from '@emotion/core';
+import MainMenu from '../MainMenu';
 
-import reducer, {
-  RestCountryContext,
-  thunks,
-} from '../../store/RestCountry/reducer';
-
-import './index.css';
+import { appStyles, globalStyles } from './style';
 
 function App() {
-  const [state, dispatch] = useReducer(reducer);
-
-  useEffect(() => {
-    thunks.fetchAllCountry(dispatch);
-  }, [dispatch]);
-
   return (
-    <RestCountryContext.Provider value={{ state, dispatch }}>
-      <h1>Country Quiz</h1>
-    </RestCountryContext.Provider>
+    <>
+      <Global styles={globalStyles} />
+      <main css={appStyles}>
+        <MainMenu />
+      </main>
+    </>
   );
 }
 
