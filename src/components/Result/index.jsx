@@ -2,7 +2,13 @@
 import BoxLayout from '../BoxLayout';
 
 import winnersImgSrc from '../../assets/images/undraw_winners_ao2o 2.svg';
-import { containerStyle, pointLabelStyle, resultTitleStyle } from './styles';
+import {
+  containerStyle,
+  pointLabelStyle,
+  resultTitleStyle,
+  tryAgainStyle,
+} from './styles';
+import Button from '../Button';
 
 function Result({ points }) {
   return (
@@ -13,6 +19,7 @@ function Result({ points }) {
         <p>
           You got <span css={pointLabelStyle}>{points}</span> correct answers
         </p>
+        <Button css={tryAgainStyle}>Try Again</Button>
       </section>
     </BoxLayout>
   );
