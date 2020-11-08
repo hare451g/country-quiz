@@ -1,19 +1,5 @@
 import { css } from '@emotion/core';
 
-const questionContainerStyle = css`
-  position: relative;
-  z-index: 1;
-`;
-
-const titleStyle = css`
-  color: white;
-  padding: 8px 16px;
-  margin: 0;
-  font-size: 36px;
-  font-weight: 700;
-  text-transform: uppercase;
-`;
-
 const headerIllustrationStyle = css`
   position: absolute;
   right: 0;
@@ -37,8 +23,6 @@ const questionStyle = css`
 `;
 
 export {
-  questionContainerStyle,
-  titleStyle,
   headerIllustrationStyle,
   choiceContainerStyle,
   countryFlagStyle,
