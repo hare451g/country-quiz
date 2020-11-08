@@ -1,29 +1,32 @@
 /** @jsxImportSource @emotion/core */
 import { Global } from '@emotion/core';
-import Box from '../Box';
-import ChoiceButton from '../ChoiceButton';
+
+import Quiz from '../Quiz';
+
 import { appStyles, globalStyles } from './style';
+
+// Mock quiz
+const mockQuizProps = {
+  question: 'Kuala Lumpur is the capital of which country?',
+  correctAnswer: 'Malaysia',
+  choices: [
+    { label: 'A', answer: 'Vietnam' },
+    { label: 'B', answer: 'Indonesia' },
+    { label: 'C', answer: 'Malaysia' },
+    { label: 'D', answer: 'Thailand' },
+  ],
+};
 
 function App() {
   return (
     <>
       <Global styles={globalStyles} />
       <main css={appStyles}>
-        <h1>Country Quiz</h1>
-        <Box>
-          <div style={{ marginBottom: '20px' }}>
-            <ChoiceButton label="A" answer="Vietnam" />
-          </div>
-          <div style={{ marginBottom: '20px' }}>
-            <ChoiceButton label="B" answer="Indonesia" status="CORRECT" />
-          </div>
-          <div style={{ marginBottom: '20px' }}>
-            <ChoiceButton label="C" answer="Malaysia" status="INCORRECT" />
-          </div>
-          <div>
-            <ChoiceButton label="D" answer="Thailand" />
-          </div>
-        </Box>
+        <Quiz
+          choices={mockQuizProps.choices}
+          correctAnswer={mockQuizProps.choices}
+          question={mockQuizProps.question}
+        />
       </main>
     </>
   );
