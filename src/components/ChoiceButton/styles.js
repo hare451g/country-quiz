@@ -2,29 +2,13 @@ import { css } from '@emotion/core';
 
 // style
 const buttonStyle = css`
-  background-color: transparent;
-  border: 2px solid rgba(169, 172, 221, 0.7);
-  border-radius: 12px;
+  border-color: rgb(169, 172, 221);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  width: 100%;
-
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 26px;
-  color: rgba(96, 102, 208, 0.7);
-
-  cursor: pointer;
-
-  transition: all 0.6s;
-  padding: 14px 18px;
-
-  &:focus {
-    outline: none;
-  }
+  color: rgb(96, 102, 208);
 
   &:hover {
     border-color: #f9ab26;

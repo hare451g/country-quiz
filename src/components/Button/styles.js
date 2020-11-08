@@ -9,6 +9,7 @@ const buttonStyle = css`
   width: 100%;
   padding: 14px 18px;
 
+  font-family: inherit;
   font-weight: 500;
   font-size: 18px;
   line-height: 26px;
