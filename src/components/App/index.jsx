@@ -1,23 +1,22 @@
-import { useEffect, useReducer } from 'react';
-
-import reducer, {
-  RestCountryContext,
-  thunks,
-} from '../../store/RestCountry/reducer';
-
-import './index.css';
+import ChoiceButton from '../ChoiceButton';
 
 function App() {
-  const [state, dispatch] = useReducer(reducer);
-
-  useEffect(() => {
-    thunks.fetchAllCountry(dispatch);
-  }, [dispatch]);
-
   return (
-    <RestCountryContext.Provider value={{ state, dispatch }}>
+    <>
       <h1>Country Quiz</h1>
-    </RestCountryContext.Provider>
+      <div style={{ marginBottom: '20px' }}>
+        <ChoiceButton label="A" answer="Vietnam" />
+      </div>
+      <div style={{ marginBottom: '20px' }}>
+        <ChoiceButton label="B" answer="Indonesia" status="CORRECT" />
+      </div>
+      <div style={{ marginBottom: '20px' }}>
+        <ChoiceButton label="C" answer="Malaysia" status="INCORRECT" />
+      </div>
+      <div>
+        <ChoiceButton label="D" answer="Thailand" />
+      </div>
+    </>
   );
 }
 
