@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/core */
-import BoxLayout from '../BoxLayout';
-import Button from '../Button';
-
+import Button from '../../components/Button';
 import heroSrc from '../../assets/images/undraw_Around_the_world_re_n353.svg';
+
 import {
   descriptionStyle,
   heroIllustrationStyle,
@@ -11,7 +10,7 @@ import {
 
 function MainMenu() {
   return (
-    <BoxLayout>
+    <>
       <section css={mainMenuContainerStyle}>
         <img
           alt="game illustration by undraw"
@@ -25,7 +24,7 @@ function MainMenu() {
       <section>
         <Button className="yellow">Start Game</Button>
       </section>
-    </BoxLayout>
+    </>
   );
 }
 

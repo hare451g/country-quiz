@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/core */
-import BoxLayout from '../BoxLayout';
+import BoxLayout from '../../components/BoxLayout';
+import Button from '../../components/Button';
 
 import winnersImgSrc from '../../assets/images/undraw_winners_ao2o 2.svg';
 import {
@@ -8,7 +9,6 @@ import {
   resultTitleStyle,
   tryAgainStyle,
 } from './styles';
-import Button from '../Button';
 
 function Result({ points }) {
   return (

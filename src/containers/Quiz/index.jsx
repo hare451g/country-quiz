@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/core */
-import ChoiceButton from '../ChoiceButton';
+import ChoiceButton from '../../components/ChoiceButton';
+import BoxLayout from '../../components/BoxLayout';
 
 // assets
 import adventureImageSrc from '../../assets/images/undraw_adventure_4hum 1.svg';
@@ -10,11 +11,10 @@ import {
   headerIllustrationStyle,
   countryFlagStyle,
 } from './styles';
-import BoxLayout from '../BoxLayout';
 
 function Quiz({ question, flag, choices }) {
   return (
-    <BoxLayout>
+    <>
       <section>
         <img
           src={adventureImageSrc}
@@ -33,7 +33,7 @@ function Quiz({ question, flag, choices }) {
           </div>
         ))}
       </section>
-    </BoxLayout>
+    </>
   );
 }
 
