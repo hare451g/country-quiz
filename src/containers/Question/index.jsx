@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/core */
-import ChoiceButton from '../ChoiceButton';
+import ChoiceButton from '../../components/ChoiceButton';
 
 // assets
 import adventureImageSrc from '../../assets/images/undraw_adventure_4hum 1.svg';
@@ -11,7 +11,7 @@ import {
   countryFlagStyle,
 } from './styles';
 
-function Question({ question, flag, choices }) {
+function Question({ choices, flag, question, onAnswer }) {
   return (
     <>
       <section>
@@ -26,9 +26,13 @@ function Question({ question, flag, choices }) {
         <p css={questionStyle}>{question}</p>
       </section>
       <section>
-        {choices.map(({ label, answer }) => (
+        {choices.map(({ label, name }) => (
           <div css={choiceContainerStyle} key={`choice-${label}`}>
-            <ChoiceButton label={label} answer={answer} />
+            <ChoiceButton
+              label={label}
+              answer={name}
+              onClick={() => onAnswer(name)}
+            />
           </div>
         ))}
       </section>

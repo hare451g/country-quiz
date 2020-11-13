@@ -8,7 +8,7 @@ import {
   mainMenuContainerStyle,
 } from './style';
 
-function MainMenu() {
+function MainMenu({ onStartGameClick }) {
   return (
     <>
       <section css={mainMenuContainerStyle}>
@@ -22,7 +22,9 @@ function MainMenu() {
         </p>
       </section>
       <section>
-        <Button className="yellow">Start Game</Button>
+        <Button className="yellow" onClick={onStartGameClick}>
+          Start Game
+        </Button>
       </section>
     </>
   );
