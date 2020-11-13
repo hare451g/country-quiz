@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/core */
-import ChoiceButton from '../../components/ChoiceButton';
+import ChoiceButton from '../ChoiceButton';
 
 // assets
 import adventureImageSrc from '../../assets/images/undraw_adventure_4hum 1.svg';
