@@ -72,6 +72,8 @@ This application/site was created as a submission to a [DevChallenges](https://d
   - When I answer correctly, I can move on to the next question
   - When I answer incorrectly, I can see my results and try again
 - `Try again` choice
+- Sound effects when answer `correct`, `incorrect` and when `done`.
+- Share result to twitter.
 
 ## How To Use
 
