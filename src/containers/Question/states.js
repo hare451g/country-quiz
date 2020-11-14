@@ -1,6 +1,7 @@
 import produce from 'immer';
 
 import actionCreator from '../../utils/actionCreator';
+import questionUtils from './utils';
 
 const CONTEXT = '@QUESTION';
 
@@ -8,6 +9,7 @@ export const QUESTION_STATUSES = {
   IDLE: `${CONTEXT}/IDLE`,
   PENDING: `${CONTEXT}/PENDING`,
   READY: `${CONTEXT}/READY`,
+  SHOW_QUESTION: `${CONTEXT}/SHOW_QUESTION`,
   SHOW_ANSWER: `${CONTEXT}/SHOW_ANSWER`,
   DONE: `${CONTEXT}/DONE`,
 };
@@ -21,13 +23,18 @@ export const initialStates = {
     userAnswer: null,
     isCorrect: null,
   },
-  status: 'idle',
+  questions: [],
+  status: QUESTION_STATUSES.IDLE,
   index: 0,
   points: 0,
   isNext: false,
 };
 
 const actionTypes = {
+  LOAD_QUESTIONS: `${CONTEXT}/LOAD_QUESTIONS`,
+  QUESTIONS_LOADED: `${CONTEXT}/QUESTIONS_LOADED`,
+  QUESTIONS_LOAD_ERROR: `${CONTEXT}/QUESTIONS_LOAD_ERROR`,
+
   LOAD_QUESTION: `${CONTEXT}/LOAD_QUESTION`,
   ANSWER: `${CONTEXT}/ANSWER`,
   NEXT: `${CONTEXT}/NEXT`,
@@ -35,6 +42,16 @@ const actionTypes = {
 };
 
 export const actions = {
+  // manage question list
+  onLoadQuestions: () => actionCreator(actionTypes.LOAD_QUESTIONS),
+  onQuestionsLoaded: (questions) =>
+    actionCreator(actionTypes.QUESTIONS_LOADED, { questions }),
+  onLoadQuestionsError: (error) =>
+    actionCreator(actionTypes.QUESTIONS_LOAD_ERROR, {
+      error,
+    }),
+
+  // manage quiz
   loadQuestion: (question, isNext) =>
     actionCreator(actionTypes.LOAD_QUESTION, {
       question,
@@ -45,9 +62,41 @@ export const actions = {
   tryAgain: () => actionCreator(actionTypes.TRY_AGAIN),
 };
 
+// side-effects actions
+export const sideEffects = {
+  // create 10 questions
+  loadQuestions: async (dispatch, countryData = []) => {
+    try {
+      dispatch(actions.onLoadQuestions());
+
+      if (!countryData) {
+        throw new Error('Empty country data');
+      }
+
+      const questions = questionUtils.createQuestions(countryData, 10);
+
+      dispatch(actions.onQuestionsLoaded(questions));
+    } catch (error) {
+      console.error(error);
+      dispatch(actions.onLoadQuestionsError(error.message));
+    }
+  },
+};
+
 // state managements
 const reducer = produce((draft, action) => {
   switch (action.type) {
+    // manage questions
+    case actionTypes.LOAD_QUESTIONS:
+      draft.status = QUESTION_STATUSES.PENDING;
+      break;
+
+    case actionTypes.QUESTIONS_LOADED:
+      draft.status = QUESTION_STATUSES.PENDING;
+      draft.questions = action.payload.questions;
+      break;
+
+    // manage quiz
     case actionTypes.LOAD_QUESTION:
       draft.status = QUESTION_STATUSES.READY;
       draft.current = {

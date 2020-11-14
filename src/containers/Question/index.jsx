@@ -5,21 +5,24 @@ import { useEffect, useReducer } from 'react';
 import Result from './Result';
 import Quiz from './Quiz';
 
-import reducer, { actions, initialStates, QUESTION_STATUSES } from './states';
+import reducer, {
+  actions,
+  initialStates,
+  QUESTION_STATUSES,
+  sideEffects,
+} from './states';
 import MainMenu from './MainMenu';
 
-function Question({ questions }) {
+function Question({ countryData }) {
   const [state, dispatch] = useReducer(reducer, initialStates);
   const { status, index, points } = state;
 
   useEffect(() => {
-    dispatch(
-      actions.loadQuestion(questions[index], index < questions.length - 1)
-    );
-  }, [index, questions]);
+    sideEffects.loadQuestions(dispatch, countryData);
+  }, [countryData]);
 
   switch (status) {
-    case QUESTION_STATUSES.READY:
+    case QUESTION_STATUSES.SHOW_QUESTION:
     case QUESTION_STATUSES.SHOW_ANSWER:
       const {
         question,
@@ -52,18 +55,7 @@ function Question({ questions }) {
 
     case QUESTION_STATUSES.IDLE:
     default:
-      return (
-        <MainMenu
-          onStartGameClick={() =>
-            dispatch(
-              actions.loadQuestion(
-                questions[index],
-                index < questions.length - 1
-              )
-            )
-          }
-        />
-      );
+      return <MainMenu onStartGameClick={() => {}} />;
   }
 }
 

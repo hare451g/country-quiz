@@ -3,13 +3,7 @@ import { useEffect, useReducer } from 'react';
 
 import Question from '../Question';
 
-import MainMenu from './MainMenu';
-import gameReducer, {
-  actions,
-  initialState,
-  SESSION_STATUS,
-  thunks,
-} from './states';
+import gameReducer, { initialState, SESSION_STATUS, thunks } from './states';
 
 function Game({ countryData }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
@@ -24,13 +18,8 @@ function Game({ countryData }) {
     case SESSION_STATUS.IDLE:
       return <div>Waiting for country data</div>;
 
-    case SESSION_STATUS.READY:
-      return (
-        <MainMenu onStartGameClick={() => dispatch(actions.onSessionStart())} />
-      );
-
     case SESSION_STATUS.STARTED:
-      return <Question questions={state.questions} />;
+      return <Question countryData={countryData} />;
 
     case SESSION_STATUS.ERROR:
       return <div>{state.error}</div>;

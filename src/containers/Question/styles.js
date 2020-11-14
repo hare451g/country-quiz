@@ -63,8 +63,7 @@ const pointLabelStyle = css`
 `;
 
 const tryAgainStyle = css`
-  margin-top: 20px;
-  width: 200px;
+  margin-bottom: 14px;
 `;
 
 export {
