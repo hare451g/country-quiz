@@ -39,6 +39,7 @@ const questionStyle = css`
   font-size: 24px;
   line-height: 36px;
   color: #2f527b;
+  min-height: 72px;
 `;
 
 const resultContainerStyle = css`
