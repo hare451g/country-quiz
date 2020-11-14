@@ -34,7 +34,7 @@ const appStyles = css`
 
   @media (max-width: 500px) {
     width: 100%;
-    padding: 0 8px;
+    padding: 0 16px;
   }
 `;
 
