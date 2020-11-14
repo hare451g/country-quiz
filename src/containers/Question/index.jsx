@@ -1,43 +1,56 @@
 /** @jsxImportSource @emotion/core */
-import ChoiceButton from '../../components/ChoiceButton';
+import { useReducer } from 'react';
 
-// assets
-import adventureImageSrc from '../../assets/images/undraw_adventure_4hum 1.svg';
+// components
+import Result from './Result';
+import Quiz from './Quiz';
 
-import {
-  choiceContainerStyle,
-  questionStyle,
-  headerIllustrationStyle,
-  countryFlagStyle,
-} from './styles';
+import reducer, { actions, initialStates, QUESTION_STATUSES } from './states';
+import MainMenu from './MainMenu';
 
-function Question({ choices, flag, question, onAnswer }) {
-  return (
-    <>
-      <section>
-        <img
-          src={adventureImageSrc}
-          alt="adventure illustration"
-          css={headerIllustrationStyle}
+function Question({ questions }) {
+  const [state, dispatch] = useReducer(reducer, initialStates);
+  const { status, index, points } = state;
+
+  switch (status) {
+    case QUESTION_STATUSES.READY:
+    case QUESTION_STATUSES.SHOW_ANSWER:
+      const { question, choices, flag, correctAnswer, userAnswer } = state;
+      return (
+        <Quiz
+          flag={flag}
+          question={question}
+          choices={choices}
+          userAnswer={userAnswer}
+          correctAnswer={correctAnswer}
+          isAnswerVisible={status === QUESTION_STATUSES.SHOW_ANSWER}
+          onSelectAnswer={(userAnswer) => dispatch(actions.answer(userAnswer))}
+          onNextClicked={() => dispatch(actions.next())}
         />
-      </section>
-      <section>
-        {!!flag && <img alt="country flag" src={flag} css={countryFlagStyle} />}
-        <p css={questionStyle}>{question}</p>
-      </section>
-      <section>
-        {choices.map(({ label, name }) => (
-          <div css={choiceContainerStyle} key={`choice-${label}`}>
-            <ChoiceButton
-              label={label}
-              answer={name}
-              onClick={() => onAnswer(name)}
-            />
-          </div>
-        ))}
-      </section>
-    </>
-  );
+      );
+
+    case QUESTION_STATUSES.DONE:
+      return (
+        <Result
+          points={points}
+          onTryAgainClick={() => dispatch(actions.tryAgain())}
+        />
+      );
+
+    default:
+      return (
+        <MainMenu
+          onStartGameClick={() =>
+            dispatch(
+              actions.loadQuestion(
+                questions[index],
+                index < questions.length - 1
+              )
+            )
+          }
+        />
+      );
+  }
 }
 
 export default Question;

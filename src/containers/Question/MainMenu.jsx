@@ -6,7 +6,7 @@ import {
   descriptionStyle,
   heroIllustrationStyle,
   mainMenuContainerStyle,
-} from './style';
+} from './styles';
 
 const MainMenu = ({ onStartGameClick }) => (
   <>

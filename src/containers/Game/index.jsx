@@ -23,24 +23,18 @@ function Game({ countryData }) {
   switch (state.status) {
     case SESSION_STATUS.IDLE:
       return <div>Waiting for country data</div>;
+
     case SESSION_STATUS.READY:
       return (
         <MainMenu onStartGameClick={() => dispatch(actions.onSessionStart())} />
       );
+
     case SESSION_STATUS.STARTED:
       const { choices, correctAnswer, flag, question } = state.current;
-      return (
-        <Question
-          choices={choices}
-          flag={flag}
-          question={question}
-          onAnswer={(userAnswer) =>
-            dispatch(actions.onAnswer(userAnswer, correctAnswer))
-          }
-        />
-      );
+      return <Question questions={state.questions} />;
     case SESSION_STATUS.ERROR:
       return <div>{state.error}</div>;
+
     default:
       return <div>error occured: {state.status}</div>;
   }
