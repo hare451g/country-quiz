@@ -4,6 +4,11 @@ const boxStyle = css`
   border-radius: 24px;
   background-color: #ffffff;
   padding: 68px 32px;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    padding: 16px 16px;
+  }
 `;
 
 export { boxStyle };

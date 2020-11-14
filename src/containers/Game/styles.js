@@ -5,6 +5,11 @@ const mainMenuContainerStyle = css`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    padding: 16px 16px;
+  }
 `;
 
 const heroIllustrationStyle = css`
@@ -23,6 +28,9 @@ const headerIllustrationStyle = css`
   position: absolute;
   right: 0;
   top: 0;
+  @media (max-width: 500px) {
+    display: none;
+  }
 `;
 
 const choiceContainerStyle = css`
@@ -40,6 +48,10 @@ const questionStyle = css`
   line-height: 36px;
   color: #2f527b;
   min-height: 72px;
+
+  @media (max-width: 500px) {
+    min-height: 36px;
+  }
 `;
 
 const resultContainerStyle = css`

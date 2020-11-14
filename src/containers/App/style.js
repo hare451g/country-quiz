@@ -31,6 +31,11 @@ const globalStyles = css`
 const appStyles = css`
   width: 464px;
   margin: auto;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    padding: 0 8px;
+  }
 `;
 
 export { appStyles, globalStyles };
