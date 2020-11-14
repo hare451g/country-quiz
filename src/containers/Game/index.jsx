@@ -1,6 +1,11 @@
 /** @jsxImportSource @emotion/core */
 import { useEffect, useReducer } from 'react';
 
+// assets
+import correctAudioSrc from '../../assets/sounds/correct.wav';
+import incorrectAudioSrc from '../../assets/sounds/incorrect.wav';
+import doneAudioSrc from '../../assets/sounds/done.mp3';
+
 // components
 import Result from './Result';
 import Question from './Question';
@@ -13,9 +18,13 @@ import reducer, {
   sideEffects,
 } from './states';
 
+const correctSound = new Audio(correctAudioSrc);
+const incorrectSound = new Audio(incorrectAudioSrc);
+const doneSound = new Audio(doneAudioSrc);
+
 function Game({ countryData }) {
   const [state, dispatch] = useReducer(reducer, initialStates);
-  const { status, index, points } = state;
+  const { status, index, points, current } = state;
 
   useEffect(() => {
     if (status === QUESTION_STATUSES.IDLE) {
@@ -29,16 +38,29 @@ function Game({ countryData }) {
     }
   }, [index]);
 
+  useEffect(() => {
+    if (status === QUESTION_STATUSES.SHOW_ANSWER) {
+      const { isCorrect } = current;
+      if (isCorrect) {
+        correctSound.play();
+      } else {
+        incorrectSound.play();
+      }
+    }
+
+    if (status === QUESTION_STATUSES.DONE) {
+      doneSound.play();
+    }
+  }, [status, current]);
+
+  const handleAnswer = (userAnswer) => {
+    dispatch(actions.answer(userAnswer));
+  };
+
   switch (status) {
     case QUESTION_STATUSES.SHOW_QUESTION:
     case QUESTION_STATUSES.SHOW_ANSWER:
-      const {
-        question,
-        choices,
-        flag,
-        correctAnswer,
-        userAnswer,
-      } = state.current;
+      const { question, choices, flag, correctAnswer, userAnswer } = current;
 
       return (
         <Question
@@ -48,7 +70,7 @@ function Game({ countryData }) {
           userAnswer={userAnswer}
           correctAnswer={correctAnswer}
           isAnswerVisible={status === QUESTION_STATUSES.SHOW_ANSWER}
-          onSelectAnswer={(userAnswer) => dispatch(actions.answer(userAnswer))}
+          onSelectAnswer={handleAnswer}
           onNextClicked={() => dispatch(actions.next())}
         />
       );
