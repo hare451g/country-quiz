@@ -1,31 +1,71 @@
 /** @jsxImportSource @emotion/core */
 import { useEffect, useReducer } from 'react';
 
-import Question from '../Question';
+// components
+import Result from './Result';
+import Question from './Question';
+import MainMenu from './MainMenu';
 
-import gameReducer, { initialState, SESSION_STATUS, thunks } from './states';
+import reducer, {
+  actions,
+  initialStates,
+  QUESTION_STATUSES,
+  sideEffects,
+} from './states';
 
 function Game({ countryData }) {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialStates);
+  const { status, index, points } = state;
 
   useEffect(() => {
-    if (state.status === SESSION_STATUS.IDLE) {
-      thunks.startSession(dispatch, countryData);
+    if (status === QUESTION_STATUSES.IDLE) {
+      sideEffects.loadQuestions(dispatch, countryData);
     }
-  }, [countryData, state.status]);
+  }, [status, countryData]);
 
-  switch (state.status) {
-    case SESSION_STATUS.IDLE:
-      return <div>Waiting for country data</div>;
+  useEffect(() => {
+    if (index > 0) {
+      dispatch(actions.loadQuestion());
+    }
+  }, [index]);
 
-    case SESSION_STATUS.STARTED:
-      return <Question countryData={countryData} />;
+  switch (status) {
+    case QUESTION_STATUSES.SHOW_QUESTION:
+    case QUESTION_STATUSES.SHOW_ANSWER:
+      const {
+        question,
+        choices,
+        flag,
+        correctAnswer,
+        userAnswer,
+      } = state.current;
 
-    case SESSION_STATUS.ERROR:
-      return <div>{state.error}</div>;
+      return (
+        <Question
+          flag={flag}
+          question={question}
+          choices={choices}
+          userAnswer={userAnswer}
+          correctAnswer={correctAnswer}
+          isAnswerVisible={status === QUESTION_STATUSES.SHOW_ANSWER}
+          onSelectAnswer={(userAnswer) => dispatch(actions.answer(userAnswer))}
+          onNextClicked={() => dispatch(actions.next())}
+        />
+      );
 
+    case QUESTION_STATUSES.DONE:
+      return (
+        <Result
+          points={points}
+          onTryAgainClick={() => dispatch(actions.tryAgain())}
+        />
+      );
+
+    case QUESTION_STATUSES.IDLE:
     default:
-      return <div>error occured: {state.status}</div>;
+      return (
+        <MainMenu onStartGameClick={() => dispatch(actions.startGame())} />
+      );
   }
 }
 

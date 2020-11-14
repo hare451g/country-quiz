@@ -1,57 +1,81 @@
 import produce from 'immer';
 
-// utils
 import actionCreator from '../../utils/actionCreator';
-import questionUtils from '../Question/utils';
+import questionUtils from './utils';
 
-// constants
-const CONTEXT = '@Game';
+const CONTEXT = '@QUESTION';
 
-export const SESSION_STATUS = {
+export const QUESTION_STATUSES = {
   IDLE: `${CONTEXT}/IDLE`,
+  PENDING: `${CONTEXT}/PENDING`,
   READY: `${CONTEXT}/READY`,
-  STARTED: `${CONTEXT}/STARTED`,
-  COMPLETE: `${CONTEXT}/COMPLETE`,
-  ERROR: `${CONTEXT}/ERROR`,
-  STOPPED: `${CONTEXT}/STOPPED`,
+  SHOW_QUESTION: `${CONTEXT}/SHOW_QUESTION`,
+  SHOW_ANSWER: `${CONTEXT}/SHOW_ANSWER`,
+  DONE: `${CONTEXT}/DONE`,
 };
 
-export const initialState = {
-  answers: [],
+export const initialStates = {
+  current: {
+    question: '',
+    choices: '',
+    flag: null,
+    correctAnswer: null,
+    userAnswer: null,
+    isCorrect: null,
+  },
   questions: [],
-  error: null,
-  status: SESSION_STATUS.IDLE,
+  status: QUESTION_STATUSES.IDLE,
+  index: 0,
+  points: 0,
+  isNext: false,
 };
 
 const actionTypes = {
-  SESSION_READY: `${CONTEXT}/SESSION_READY`,
-  SESSION_START: `${CONTEXT}/SESSION_START`,
-  SESSION_ERROR: `${CONTEXT}/SESSION_ERROR`,
-  SESSION_END: `${CONTEXT}/SESSION_END`,
+  LOAD_QUESTIONS: `${CONTEXT}/LOAD_QUESTIONS`,
+  QUESTIONS_LOADED: `${CONTEXT}/QUESTIONS_LOADED`,
+  QUESTIONS_LOAD_ERROR: `${CONTEXT}/QUESTIONS_LOAD_ERROR`,
+  START_GAME: `${CONTEXT}/START_GAME`,
+  LOAD_QUESTION: `${CONTEXT}/LOAD_QUESTION`,
+  ANSWER: `${CONTEXT}/ANSWER`,
+  NEXT: `${CONTEXT}/NEXT`,
+  TRY_AGAIN: `${CONTEXT}/TRY_AGAIN`,
 };
 
-// actions
 export const actions = {
-  onSessionReady: (questions) =>
-    actionCreator(actionTypes.SESSION_READY, { questions }),
-  onSessionError: (error = 'Unhandled error') =>
-    actionCreator(actionTypes.SESSION_ERROR, { error }),
-  onSessionEnd: () => actionCreator(actionTypes.SESSION_END),
+  // manage question list
+  onLoadQuestions: () => actionCreator(actionTypes.LOAD_QUESTIONS),
+  onQuestionsLoaded: (questions) =>
+    actionCreator(actionTypes.QUESTIONS_LOADED, { questions }),
+  onLoadQuestionsError: (error) =>
+    actionCreator(actionTypes.QUESTIONS_LOAD_ERROR, {
+      error,
+    }),
+
+  // manage quiz
+  startGame: () => actionCreator(actionTypes.START_GAME),
+  loadQuestion: () => actionCreator(actionTypes.LOAD_QUESTION),
+  answer: (userAnswer) => actionCreator(actionTypes.ANSWER, { userAnswer }),
+  next: () => actionCreator(actionTypes.NEXT),
+  tryAgain: () => actionCreator(actionTypes.TRY_AGAIN),
 };
 
-// thunks
-export const thunks = {
+// side-effects actions
+export const sideEffects = {
   // create 10 questions
-  startSession: async (dispatch, countryData = []) => {
+  loadQuestions: async (dispatch, countryData = []) => {
     try {
+      dispatch(actions.onLoadQuestions());
+
       if (!countryData) {
         throw new Error('Empty country data');
       }
+
       const questions = questionUtils.createQuestions(countryData, 10);
-      dispatch(actions.onSessionReady(questions));
+
+      dispatch(actions.onQuestionsLoaded(questions));
     } catch (error) {
       console.error(error);
-      dispatch(actions.onSessionError(error));
+      dispatch(actions.onLoadQuestionsError(error.message));
     }
   },
 };
@@ -59,28 +83,58 @@ export const thunks = {
 // state managements
 const reducer = produce((draft, action) => {
   switch (action.type) {
-    case actionTypes.SESSION_READY:
+    // manage questions
+    case actionTypes.LOAD_QUESTIONS:
+      draft.status = QUESTION_STATUSES.PENDING;
+      break;
+
+    case actionTypes.QUESTIONS_LOADED:
+      draft.status = QUESTION_STATUSES.READY;
       draft.questions = action.payload.questions;
-      draft.status = SESSION_STATUS.STARTED;
       break;
 
-    case actionTypes.SESSION_START:
-      draft.status = SESSION_STATUS.STARTED;
-      draft.current = draft.questions[0];
-      draft.answers = [];
+    case actionTypes.START_GAME:
+      draft.status = QUESTION_STATUSES.SHOW_QUESTION;
+      draft.current = draft.questions[draft.index];
+      draft.isNext = true;
       break;
 
-    case actionTypes.SESSION_ERROR:
-      draft.error = action.payload.error;
-      draft.status = SESSION_STATUS.ERROR;
+    // manage quiz
+    case actionTypes.LOAD_QUESTION:
+      draft.status = QUESTION_STATUSES.SHOW_QUESTION;
+      draft.current = draft.questions[draft.index];
+      draft.isNext = draft.index < draft.questions.length - 1;
       break;
 
-    case actionTypes.SESSION_END:
-      draft.answers = initialState.answers;
-      draft.questions = initialState.questions;
-      draft.error = initialState.error;
-      draft.status = initialState.status;
-      draft.current = initialState.current;
+    case actionTypes.ANSWER:
+      const isCorrect =
+        draft.current.correctAnswer === action.payload.userAnswer;
+
+      draft.status = QUESTION_STATUSES.SHOW_ANSWER;
+      draft.current.userAnswer = action.payload.userAnswer;
+      draft.current.isCorrect = isCorrect;
+
+      if (isCorrect) {
+        draft.points += 1;
+      }
+      break;
+
+    case actionTypes.NEXT:
+      if (draft.isNext) {
+        draft.index += 1;
+        draft.status = QUESTION_STATUSES.SHOW_QUESTION;
+      } else {
+        draft.status = QUESTION_STATUSES.DONE;
+        draft.isNext = false;
+        draft.current = initialStates.current;
+      }
+      break;
+
+    case actionTypes.TRY_AGAIN:
+      draft.status = QUESTION_STATUSES.IDLE;
+      draft.index = initialStates.index;
+      draft.points = initialStates.points;
+      draft.isNext = initialStates.isNext;
       break;
 
     default:
