@@ -18,8 +18,16 @@ function Question({ countryData }) {
   const { status, index, points } = state;
 
   useEffect(() => {
-    sideEffects.loadQuestions(dispatch, countryData);
-  }, [countryData]);
+    if (status === QUESTION_STATUSES.IDLE) {
+      sideEffects.loadQuestions(dispatch, countryData);
+    }
+  }, [status, countryData]);
+
+  useEffect(() => {
+    if (index > 0) {
+      dispatch(actions.loadQuestion());
+    }
+  }, [index]);
 
   switch (status) {
     case QUESTION_STATUSES.SHOW_QUESTION:
@@ -55,7 +63,9 @@ function Question({ countryData }) {
 
     case QUESTION_STATUSES.IDLE:
     default:
-      return <MainMenu onStartGameClick={() => {}} />;
+      return (
+        <MainMenu onStartGameClick={() => dispatch(actions.startGame())} />
+      );
   }
 }
 
