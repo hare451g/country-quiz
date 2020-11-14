@@ -4,7 +4,8 @@ import { useEffect, useReducer } from 'react';
 // assets
 import correctAudioSrc from '../../assets/sounds/correct.wav';
 import incorrectAudioSrc from '../../assets/sounds/incorrect.wav';
-import doneAudioSrc from '../../assets/sounds/done.mp3';
+import booAudioSrc from '../../assets/sounds/boo.wav';
+import celebrateAudioSrc from '../../assets/sounds/celebrate.wav';
 
 // components
 import Result from './Result';
@@ -20,7 +21,8 @@ import reducer, {
 
 const correctSound = new Audio(correctAudioSrc);
 const incorrectSound = new Audio(incorrectAudioSrc);
-const doneSound = new Audio(doneAudioSrc);
+const booSound = new Audio(booAudioSrc);
+const celebrateSound = new Audio(celebrateAudioSrc);
 
 function Game({ countryData }) {
   const [state, dispatch] = useReducer(reducer, initialStates);
@@ -49,9 +51,13 @@ function Game({ countryData }) {
     }
 
     if (status === QUESTION_STATUSES.DONE) {
-      doneSound.play();
+      if (points > 5) {
+        celebrateSound.play();
+      } else {
+        booSound.play();
+      }
     }
-  }, [status, current]);
+  }, [status, points, current]);
 
   const handleAnswer = (userAnswer) => {
     dispatch(actions.answer(userAnswer));
