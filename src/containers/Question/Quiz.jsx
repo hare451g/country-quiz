@@ -60,11 +60,14 @@ const Quiz = ({
           />
         </div>
       ))}
-      {isAnswerVisible && (
-        <Button className="yellow" onClick={onNextClicked}>
-          Next{' '}
-        </Button>
-      )}
+
+      <Button
+        className="yellow"
+        onClick={onNextClicked}
+        disabled={!isAnswerVisible}
+      >
+        Next
+      </Button>
     </section>
   </>
 );
