@@ -30,7 +30,6 @@ function Game({ countryData }) {
       );
 
     case SESSION_STATUS.STARTED:
-      const { choices, correctAnswer, flag, question } = state.current;
       return <Question questions={state.questions} />;
     case SESSION_STATUS.ERROR:
       return <div>{state.error}</div>;

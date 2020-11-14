@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/core */
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 
 // components
 import Result from './Result';
@@ -12,10 +12,23 @@ function Question({ questions }) {
   const [state, dispatch] = useReducer(reducer, initialStates);
   const { status, index, points } = state;
 
+  useEffect(() => {
+    dispatch(
+      actions.loadQuestion(questions[index], index < questions.length - 1)
+    );
+  }, [index, questions]);
+
   switch (status) {
     case QUESTION_STATUSES.READY:
     case QUESTION_STATUSES.SHOW_ANSWER:
-      const { question, choices, flag, correctAnswer, userAnswer } = state;
+      const {
+        question,
+        choices,
+        flag,
+        correctAnswer,
+        userAnswer,
+      } = state.current;
+
       return (
         <Quiz
           flag={flag}
@@ -37,6 +50,7 @@ function Question({ questions }) {
         />
       );
 
+    case QUESTION_STATUSES.IDLE:
     default:
       return (
         <MainMenu

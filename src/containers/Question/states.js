@@ -13,12 +13,14 @@ export const QUESTION_STATUSES = {
 };
 
 export const initialStates = {
-  question: '',
-  choices: '',
-  flag: null,
-  correctAnswer: null,
-  userAnswer: null,
-  isCorrect: null,
+  current: {
+    question: '',
+    choices: '',
+    flag: null,
+    correctAnswer: null,
+    userAnswer: null,
+    isCorrect: null,
+  },
   status: 'idle',
   index: 0,
   points: 0,
@@ -34,7 +36,10 @@ const actionTypes = {
 
 export const actions = {
   loadQuestion: (question, isNext) =>
-    actionCreator(actionTypes.LOAD_QUESTION, { ...question, isNext }),
+    actionCreator(actionTypes.LOAD_QUESTION, {
+      question,
+      isNext,
+    }),
   answer: (userAnswer) => actionCreator(actionTypes.ANSWER, { userAnswer }),
   next: () => actionCreator(actionTypes.NEXT),
   tryAgain: () => actionCreator(actionTypes.TRY_AGAIN),
@@ -44,22 +49,24 @@ export const actions = {
 const reducer = produce((draft, action) => {
   switch (action.type) {
     case actionTypes.LOAD_QUESTION:
-      draft.question = action.payload.question;
-      draft.choices = action.payload.choices;
-      draft.flag = action.payload.flag;
-      draft.correctAnswer = action.payload.correctAnswer;
-      draft.userAnswer = action.payload.userAnswer;
-      draft.isCorrect = null;
       draft.status = QUESTION_STATUSES.READY;
+      draft.current = {
+        ...action.payload.question,
+        userAnswer: null,
+        isCorrect: null,
+      };
       draft.isNext = action.payload.isNext;
       break;
 
     case actionTypes.ANSWER:
-      draft.status = QUESTION_STATUSES.SHOW_ANSWER;
-      draft.userAnswer = action.payload.userAnswer;
-      draft.isCorrect = draft.correctAnswer === action.payload.userAnswer;
+      const isCorrect =
+        draft.current.correctAnswer === action.payload.userAnswer;
 
-      if (draft.correctAnswer === action.payload.userAnswer) {
+      draft.status = QUESTION_STATUSES.SHOW_ANSWER;
+      draft.current.userAnswer = action.payload.userAnswer;
+      draft.current.isCorrect = isCorrect;
+
+      if (isCorrect) {
         draft.points += 1;
       }
       break;
@@ -69,12 +76,7 @@ const reducer = produce((draft, action) => {
         draft.index += 1;
       } else {
         draft.status = QUESTION_STATUSES.DONE;
-        draft.question = initialStates.question;
-        draft.choices = initialStates.choices;
-        draft.flag = initialStates.flag;
-        draft.correctAnswer = initialStates.correctAnswer;
-        draft.userAnswer = initialStates.userAnswer;
-        draft.isCorrect = initialStates.isCorrect;
+        draft.current = initialStates.current;
         draft.isNext = initialStates.isNext;
       }
       break;
