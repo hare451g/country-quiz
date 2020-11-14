@@ -74,7 +74,7 @@ export const actions = {
 
 const createChoices = (data) =>
   ['A', 'B', 'C', 'D'].map((label) => ({
-    ...data[randomizer(data.length - 1)],
+    ...data.filter(({ name }) => !!name)[randomizer(data.length - 1)],
     label,
   }));
 
