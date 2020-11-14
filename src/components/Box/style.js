@@ -6,7 +6,7 @@ const boxStyle = css`
   padding: 68px 32px;
 
   @media (max-width: 500px) {
-    width: 100%;
+    width: 90vw;
     padding: 16px 16px;
   }
 `;
