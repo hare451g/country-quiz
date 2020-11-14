@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/core */
 import Button from '../../components/Button';
+import TwitterButton from '../../components/TwitterButton';
 
 import winnersImgSrc from '../../assets/images/undraw_winners_ao2o 2.svg';
 
@@ -20,6 +21,7 @@ const Result = ({ points, onTryAgainClick }) => (
     <Button css={tryAgainStyle} onClick={onTryAgainClick}>
       Try Again
     </Button>
+    <TwitterButton points={points}>Tweet your result</TwitterButton>
   </section>
 );
 
