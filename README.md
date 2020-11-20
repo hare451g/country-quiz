@@ -43,7 +43,7 @@ Introduce your projects by taking a screenshot or a gif. Try to tell visitors a 
 
 - What was your experience?
 
-  bit confused at choosing state management, but at last I choose react's useReducer + immer for managing state, to too fancy but works as expected.
+  bit confused at choosing state management, but at last I choose react's useReducer + immer for managing state, nothing fancy but works as expected.
 
 - What have you learned/improved?
 
